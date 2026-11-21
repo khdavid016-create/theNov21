@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>그리운 마음을 담아 전하는 편지</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold-light: #f6e2b3;
+      --gold-accent: #d4af37;
+      --warm-ivory: #fffaf0;
+      --glass-bg: rgba(22, 16, 12, 0.56);
+      --glass-border: rgba(246, 226, 179, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: 'Gowun Batang', 'Nanum Myeongjo', serif;
+      background-color: #140f0b;
+      color: var(--warm-ivory);
+    }
+
+    /* Fullscreen Background Image with Subtle Breathing Zoom */
+    .bg-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-image {
+      width: 100%;
+      height: 100%;
+      background-image: url('puppies.jpg');
+      background-size: cover;
+      background-position: center 42%;
+      filter: brightness(0.76) contrast(1.06) sepia(0.08);
+      transform: scale(1.03);
+      animation: slowBreathe 22s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowBreathe {
+      0% {
+        transform: scale(1.02) translate(0, 0);
+      }
+      100% {
+        transform: scale(1.1) translate(-1%, -1%);
+      }
+    }
+
+    /* Warm Vignette & Atmospheric Overlay */
+    .vignette-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255, 220, 160, 0.14) 0%, rgba(20, 14, 10, 0.58) 70%, rgba(10, 7, 5, 0.85) 100%),
+        linear-gradient(180deg, rgba(18, 12, 8, 0.45) 0%, rgba(18, 12, 8, 0.25) 45%, rgba(15, 10, 7, 0.72) 100%);
+      pointer-events: none;
+    }
+
+    /* Subtle Sunbeam / Light Ray Effect */
+    .sunbeams {
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 140%;
+      height: 140%;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ray {
+      position: absolute;
+      top: -10%;
+      width: 180px;
+      height: 140%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 236, 188, 0.22) 0%,
+        rgba(255, 219, 148, 0.08) 55%,
+        rgba(255, 219, 148, 0) 100%
+      );
+      filter: blur(22px);
+      transform-origin: top center;
+      animation: raySway 14s ease-in-out infinite alternate;
+    }
+
+    .ray:nth-child(1) {
+      left: 18%;
+      width: 220px;
+      transform: rotate(-22deg);
+      animation-duration: 16s;
+    }
+
+    .ray:nth-child(2) {
+      left: 46%;
+      width: 150px;
+      transform: rotate(-14deg);
+      animation-duration: 12s;
+      animation-delay: -4s;
+    }
+
+    .ray:nth-child(3) {
+      left: 72%;
+      width: 240px;
+      transform: rotate(-26deg);
+      animation-duration: 19s;
+      animation-delay: -7s;
+    }
+
+    @keyframes raySway {
+      0% {
+        opacity: 0.35;
+        transform: rotate(-22deg) translateX(-18px);
+      }
+      50% {
+        opacity: 0.72;
+      }
+      100% {
+        opacity: 0.4;
+        transform: rotate(-16deg) translateX(22px);
+      }
+    }
+
+    /* Floating Hearts & Golden Dust Canvas */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Top Control Bar (Music Toggle & Replay) */
+    .top-controls {
+      position: fixed;
+      top: 20px;
+      right: 22px;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ctrl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: rgba(24, 17, 13, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--gold-light);
+      font-family: 'Gowun Batang', serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+      transition: all 0.35s ease;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(54, 39, 28, 0.82);
+      border-color: rgba(246, 226, 179, 0.65);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(212, 175, 55, 0.22);
+    }
+
+    .ctrl-btn:active {
+      transform: translateY(0);
+    }
+
+    .ctrl-btn.playing {
+      border-color: var(--gold-accent);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.35);
+    }
+
+    .equalizer {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 13px;
+      width: 14px;
+    }
+
+    .equalizer span {
+      display: block;
+      width: 2.5px;
+      height: 4px;
+      background-color: var(--gold-light);
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
+
+    .ctrl-btn.playing .equalizer span:nth-child(1) {
+      animation: eqBar 0.8s ease-in-out infinite alternate;
+    }
+    .ctrl-btn.playing .equalizer span:nth-child(2) {
+      animation: eqBar 0.55s ease-in-out 0.2s infinite alternate;
+    }
+    .ctrl-btn.playing .equalizer span:nth-child(3) {
+      animation: eqBar 0.7s ease-in-out 0.35s infinite alternate;
+    }
+
+    @keyframes eqBar {
+      0% { height: 3px; }
+      100% { height: 13px; }
+    }
+
+    /* Main Card Layout */
+    .stage {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 84px 20px 48px;
+    }
+
+    .letter-card {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      padding: 48px 42px 44px;
+      border-radius: 22px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(11px);
+      -webkit-backdrop-filter: blur(11px);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.55),
+        inset 0 0 0 1px rgba(255, 248, 230, 0.08);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Delicate Inner Gold Frame */
+    .letter-card::before {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border-radius: 15px;
+      border: 1px solid rgba(246, 226, 179, 0.2);
+      pointer-events: none;
+    }
+
+    /* Top Decorative Emblem */
+    .emblem {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--gold-light);
+      font-size: 0.82rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: cascadeDown 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+    }
+
+    .emblem-line {
+      width: 34px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+
+    /* Cascading Letter Lines (Top to Bottom) */
+    .letter-title {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #fff6e0;
+      letter-spacing: 0.06em;
+      margin-bottom: 26px;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      transform: translateY(-24px);
+      animation: cascadeDown 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+    }
+
+    .letter-body {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 1.07rem;
+      line-height: 1.92;
+      color: rgba(255, 250, 240, 0.94);
+      word-break: keep-all;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .letter-line {
+      opacity: 0;
+      transform: translateY(-22px);
+      animation: cascadeDown 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .letter-line:nth-child(1) { animation-delay: 1.05s; }
+    .letter-line:nth-child(2) { animation-delay: 1.65s; }
+    .letter-line:nth-child(3) { animation-delay: 2.25s; }
+    .letter-line:nth-child(4) { animation-delay: 2.85s; }
+    .letter-line:nth-child(5) { animation-delay: 3.45s; }
+
+    .highlight {
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .letter-divider {
+      width: 48px;
+      height: 1px;
+      margin: 26px auto 20px;
+      background: linear-gradient(90deg, transparent, rgba(246, 226, 179, 0.65), transparent);
+      opacity: 0;
+      transform: translateY(-16px);
+      animation: cascadeDown 1.2s cubic-bezier(0.22, 1, 0.36, 1) 4.0s forwards;
+    }
+
+    .letter-sign {
+      font-family: 'Nanum Myeongjo', serif;
+      font-size: 0.98rem;
+      color: var(--gold-light);
+      letter-spacing: 0.1em;
+      opacity: 0;
+      transform: translateY(-18px);
+      animation: cascadeDown 1.3s cubic-bezier(0.22, 1, 0.36, 1) 4.35s forwards;
+    }
+
+    @keyframes cascadeDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-24px);
+        filter: blur(3px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    /* Replay state reset */
+    .letter-card.replaying .emblem,
+    .letter-card.replaying .letter-title,
+    .letter-card.replaying .letter-line,
+    .letter-card.replaying .letter-divider,
+    .letter-card.replaying .letter-sign {
+      animation: none !important;
+      opacity: 0;
+      transform: translateY(-24px);
+    }
+
+    /* Responsive Design for Mobile */
+    @media (max-width: 640px) {
+      .top-controls {
+        top: 14px;
+        right: 14px;
+        left: 14px;
+        justify-content: flex-end;
+      }
+
+      .ctrl-btn {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+      }
+
+      .stage {
+        padding: 72px 16px 32px;
+        justify-content: flex-end;
+      }
+
+      .letter-card {
+        padding: 34px 24px 32px;
+        border-radius: 18px;
+        background: rgba(20, 14, 10, 0.64);
+      }
+
+      .letter-card::before {
+        inset: 8px;
+        border-radius: 12px;
+      }
+
+      .letter-title {
+        font-size: 1.32rem;
+        margin-bottom: 20px;
+      }
+
+      .letter-body {
+        font-size: 0.95rem;
+        line-height: 1.82;
+        gap: 13px;
+      }
+
+      .letter-sign {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Photo -->
+  <div class="bg-container">
+    <div class="bg-image"></div>
+  </div>
+
+  <!-- Warm Vignette -->
+  <div class="vignette-overlay"></div>
+
+  <!-- Soft Sunbeams -->
+  <div class="sunbeams" aria-hidden="true">
+    <div class="ray"></div>
+    <div class="ray"></div>
+    <div class="ray"></div>
+  </div>
+
+  <!-- Subtle Floating Hearts & Light Particles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Music & Replay Controls -->
+  <div class="top-controls">
+    <button id="replayBtn" class="ctrl-btn" type="button" title="편지 다시 보기">
+      <span>↻ 다시 읽기</span>
+    </button>
+    <button id="musicBtn" class="ctrl-btn" type="button" aria-pressed="false">
+      <span class="equalizer" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <span id="musicLabel">음악 켜기</span>
+    </button>
+  </div>
+
+  <!-- Main Letter Card -->
+  <main class="stage">
+    <article id="letterCard" class="letter-card">
+      <div class="emblem">
+        <span class="emblem-line"></span>
+        <span>FOR YOU</span>
+        <span class="emblem-line"></span>
+      </div>
+
+      <h1 class="letter-title">문득 네가 떠오르는 따뜻한 날에</h1>
+
+      <div class="letter-body">
+        <p class="letter-line">
+          해맑게 웃고 있는 이 작은 아이들을 바라보다가,<br />
+          어느새 네 얼굴이 떠올라 한참을 머물렀어.
+        </p>
+        <p class="letter-line">
+          아무 이유 없이도 곁에 있어 주던 따스한 온기와<br />
+          바라보기만 해도 마음이 놓이던 그 다정한 눈빛이<br />
+          오늘따라 유난히 깊게 그리워진다.
+        </p>
+        <p class="letter-line">
+          바쁜 하루 속에서도 네가 늘 <span class="highlight">햇살처럼 환하게 웃기를</span>,<br />
+          마음 시린 날 없이 포근한 안부로 가득하기를 바라.
+        </p>
+        <p class="letter-line">
+          멀리 있어도, 잠시 떨어져 있어도<br />
+          내 마음은 언제나 네 곁을 조용히 맴돌고 있을게.
+        </p>
+        <p class="letter-line">
+          오늘도 변함없이, 진심을 담아 너를 아끼고 사랑해.
+        </p>
+      </div>
+
+      <div class="letter-divider"></div>
+      <div class="letter-sign">언제나 네 편인 사람이</div>
+    </article>
+  </main>
+
+  <script>
+    /* ==========================================================
+       1. Subtle Floating Hearts & Warm Light Motes Animation
+       ========================================================== */
+    (function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particles = [];
+      const totalCount = Math.min(34, Math.floor((width * height) / 36000) + 16);
+
+      function createParticle(randomY = false) {
+        const isHeart = Math.random() < 0.42;
+        return {
+          x: Math.random() * width,
+          y: randomY ? Math.random() * height : height + 20 + Math.random() * 80,
+          size: isHeart ? 6 + Math.random() * 7 : 1.8 + Math.random() * 2.8,
+          speedY: 0.25 + Math.random() * 0.45,
+          driftX: (Math.random() - 0.5) * 0.35,
+          wobbleSpeed: 0.008 + Math.random() * 0.012,
+          wobblePhase: Math.random() * Math.PI * 2,
+          alpha: 0.16 + Math.random() * 0.34,
+          isHeart
+        };
+      }
+
+      for (let i = 0; i < totalCount; i++) {
+        particles.push(createParticle(true));
+      }
+
+      function drawHeart(x, y, size, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.beginPath();
+        const topCurveHeight = size * 0.3;
+        ctx.moveTo(0, topCurveHeight);
+        ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+        ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, (size + topCurveHeight) / 1.4, 0, size);
+        ctx.bezierCurveTo(0, (size + topCurveHeight) / 1.4, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+        ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+        ctx.closePath();
+
+        const grad = ctx.createRadialGradient(0, size * 0.35, 1, 0, size * 0.4, size);
+        grad.addColorStop(0, `rgba(255, 224, 185, ${alpha})`);
+        grad.addColorStop(1, `rgba(244, 180, 150, ${alpha * 0.25})`);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawMote(x, y, radius, alpha) {
+        ctx.save();
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius * 2.6);
+        grad.addColorStop(0, `rgba(255, 243, 205, ${alpha * 1.15})`);
+        grad.addColorStop(0.5, `rgba(246, 214, 148, ${alpha * 0.45})`);
+        grad.addColorStop(1, 'rgba(246, 214, 148, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 2.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.y -= p.speedY;
+          p.wobblePhase += p.wobbleSpeed;
+          p.x += p.driftX + Math.sin(p.wobblePhase) * 0.28;
+
+          // Fade smoothly near top and bottom edges
+          let edgeFade = 1;
+          if (p.y < height * 0.15) {
+            edgeFade = Math.max(0, p.y / (height * 0.15));
+          } else if (p.y > height * 0.9) {
+            edgeFade = Math.max(0, (height - p.y) / (height * 0.1));
+          }
+
+          if (p.isHeart) {
+            drawHeart(p.x, p.y, p.size, p.alpha * edgeFade);
+          } else {
+            drawMote(p.x, p.y, p.size, p.alpha * edgeFade);
+          }
+
+          if (p.y < -30 || p.x < -40 || p.x > width + 40) {
+            particles[i] = createParticle(false);
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
+
+    /* ==========================================================
+       2. Gentle Warm Piano / Music Box Melody via Web Audio API
+       (Zero external MP3 dependency - works offline cleanly!)
+       ========================================================== */
+    (function initGentleMusic() {
+      const musicBtn = document.getElementById('musicBtn');
+      const musicLabel = document.getElementById('musicLabel');
+      let audioCtx = null;
+      let isPlaying = false;
+      let schedulerTimer = null;
+      let stepIndex = 0;
+
+      // Tender, sentimental melody in F Major (frequencies in Hz)
+      // Warm music-box & soft felt-piano harmonic progression
+      const melodySequence = [
+        // Measure 1 (Fmaj7)
+        { note: 349.23, bass: 174.61, dur: 0.95 }, // F4 + F3
+        { note: 440.00, bass: null,   dur: 0.95 }, // A4
+        { note: 523.25, bass: 261.63, dur: 0.95 }, // C5 + C4
+        { note: 659.25, bass: null,   dur: 1.15 }, // E5
+
+        // Measure 2 (Dm7)
+        { note: 587.33, bass: 146.83, dur: 0.95 }, // D5 + D3
+        { note: 523.25, bass: null,   dur: 0.95 }, // C5
+        { note: 440.00, bass: 220.00, dur: 0.95 }, // A4 + A3
+        { note: 349.23, bass: null,   dur: 1.15 }, // F4
+
+        // Measure 3 (Bbmaj7)
+        { note: 392.00, bass: 116.54, dur: 0.95 }, // G4 + Bb2
+        { note: 440.00, bass: null,   dur: 0.95 }, // A4
+        { note: 466.16, bass: 174.61, dur: 0.95 }, // Bb4 + F3
+        { note: 587.33, bass: null,   dur: 1.15 }, // D5
+
+        // Measure 4 (Csus4 -> C)
+        { note: 523.25, bass: 130.81, dur: 0.95 }, // C5 + C3
+        { note: 466.16, bass: null,   dur: 0.95 }, // Bb4
+        { note: 440.00, bass: 196.00, dur: 0.95 }, // A4 + G3
+        { note: 392.00, bass: null,   dur: 1.35 }  // G4
+      ];
+
+      function playSoftNote(freq, duration, volume, isBass = false) {
+        if (!audioCtx || !isPlaying) return;
+        const now = audioCtx.currentTime;
+
+        const osc = audioCtx.createOscillator();
+        const overtone = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        // Subtle warm harmonic shimmer
+        overtone.type = 'triangle';
+        overtone.frequency.setValueAtTime(freq * (isBass ? 1 : 2), now);
+
+        const overtoneGain = audioCtx.createGain();
+        overtoneGain.gain.setValueAtTime(isBass ? 0.08 : 0.04, now);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(isBass ? 520 : 1400, now);
+
+        // Soft piano-like envelope
+        gainNode.gain.setValueAtTime(0.0001, now);
+        gainNode.gain.exponentialRampToValueAtTime(volume, now + 0.08);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration * 2.4);
+
+        osc.connect(filter);
+        overtone.connect(overtoneGain);
+        overtoneGain.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        osc.start(now);
+        overtone.start(now);
+        osc.stop(now + duration * 2.5);
+        overtone.stop(now + duration * 2.5);
+      }
+
+      function scheduleNext() {
+        if (!isPlaying) return;
+        const item = melodySequence[stepIndex % melodySequence.length];
+        playSoftNote(item.note, item.dur, 0.075, false);
+        if (item.bass) {
+          playSoftNote(item.bass, item.dur * 1.6, 0.045, true);
+        }
+        stepIndex++;
+        schedulerTimer = setTimeout(scheduleNext, item.dur * 1000);
+      }
+
+      function startMusic() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        isPlaying = true;
+        musicBtn.classList.add('playing');
+        musicBtn.setAttribute('aria-pressed', 'true');
+        musicLabel.textContent = '음악 끄기';
+        scheduleNext();
+      }
+
+      function stopMusic() {
+        isPlaying = false;
+        clearTimeout(schedulerTimer);
+        musicBtn.classList.remove('playing');
+        musicBtn.setAttribute('aria-pressed', 'false');
+        musicLabel.textContent = '음악 켜기';
+      }
+
+      musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          stopMusic();
+        } else {
+          startMusic();
+        }
+      });
+    })();
+
+    /* ==========================================================
+       3. Replay Cascading Text Animation
+       ========================================================== */
+    document.getElementById('replayBtn').addEventListener('click', () => {
+      const card = document.getElementById('letterCard');
+      card.classList.add('replaying');
+      void card.offsetWidth; // trigger reflow
+      card.classList.remove('replaying');
+    });
+  </script>
+</body>
+</html>
